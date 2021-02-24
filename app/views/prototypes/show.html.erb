@@ -49,6 +49,7 @@
             <li class="comments_list">
               <%= " コメントのテキスト "%>
               <% if user_signed_in? %>
+                     <%= "#{@prototype.user.name}" %>
               <%= link_to comment.text, "/users/#{current_user.id}", class: :comment_user %>
               <% end %>
             </li>
