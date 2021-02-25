@@ -4,8 +4,12 @@ class UsersController < ApplicationController
   end
 
  def show
-  @user = current_user.prototypes
-  @prototypes = users.prototype
+  user = User.find(params[:id])
+  @prototypes = user.prototypes
+  @name = user.name
+  @profile = user.profile
+  @occupation = user.occupation
+  @position = user.position
  end
 
   private
