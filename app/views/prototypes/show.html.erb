@@ -48,8 +48,8 @@
           <% @comments.each do |comment| %>
             <li class="comments_list">
               <%= " コメントのテキスト "%>
-              <%= "#{@prototype.user.name}" %>
-              <%= link_to comment.text, "/users/#{ @prototype.user_id}", class: :comment_user %>
+              <%= comment.text %>
+              <%= link_to "#{@prototype.user.name}", "/users/#{ @prototype.user_id}", class: :comment_user %>
             </li>
           <% end  %>
 
