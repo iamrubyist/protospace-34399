@@ -1,5 +1,6 @@
 class PrototypesController < ApplicationController
   before_action :set_tweet,only: [:edit,:show]
+  before_action :create_params,only: [:create]
   before_action :move_to_index, except:[:index, :show,:new]
   def index
     @prototypes = Prototype.all
@@ -53,6 +54,10 @@ private
 # { ~~ , ~~ , prototype => { content => "name, text", image=> ~~~~~, aaa=> }}
 def set_tweet
   @prototype = Prototype.find(params[:id])
+end
+
+def create_params
+  @prototype = Prototype.new(prototype_params)
 end
 
 def move_to_index
