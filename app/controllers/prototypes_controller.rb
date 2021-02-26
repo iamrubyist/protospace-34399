@@ -1,8 +1,9 @@
 class PrototypesController < ApplicationController
   before_action :set_tweet, except: [:index, :new, :create]
-  before_action :move_to_index, except:[:index, :show,:new]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :move_to_index, only: [:edit, :update, :destroy]
   def index
-    @prototypes = Prototype.includes(:user)
+   @prototypes = Prototype.includes(:user)
   end
   
   def new
@@ -23,8 +24,8 @@ class PrototypesController < ApplicationController
   end
 
   def update
-    if prototype.update(prototype_params)
-      redirect_to prototype_path, method: :patch
+    if @prototype.update(prototype_params)
+      redirect_to prototype_path(@prototype)
     else
       render :edit
     end
@@ -35,6 +36,7 @@ class PrototypesController < ApplicationController
     @comments = @prototype.comments
   end
 
+ 
   def destroy
     if @prototype.destroy
       redirect_to root_path
@@ -42,7 +44,6 @@ class PrototypesController < ApplicationController
       redirect_to root_path
     end
   end
-
 
 private 
  def prototype_params
@@ -53,12 +54,8 @@ private
 def set_tweet
   @prototype = Prototype.find(params[:id])
 end
-
 def move_to_index
-  #@prototype = Prototype.new(prototype_params)
-  unless user_signed_in? && current_user.id == @prototype.user_id
-    redirect_to action: :index
-  end
+  redirect_to root_path unless current_user == @prototype.user
 end
 
 end 
