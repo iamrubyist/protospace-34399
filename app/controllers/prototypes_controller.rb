@@ -1,9 +1,8 @@
 class PrototypesController < ApplicationController
-  before_action :set_tweet,only: [:edit,:show]
-  before_action :create_params,only: [:create]
+  before_action :set_tweet, except: [:index, :new, :create]
   before_action :move_to_index, except:[:index, :show,:new]
   def index
-    @prototypes = Prototype.all
+    @prototypes = Prototype.includes(:user)
   end
   
   def new
@@ -16,16 +15,14 @@ class PrototypesController < ApplicationController
    if @prototype.save
       redirect_to root_path
    else
-       render :index
+       render :new
     end
   end
 
   def edit
-
   end
 
   def update
-    prototype = Prototype.find(params[:id])
     if prototype.update(prototype_params)
       redirect_to prototype_path, method: :patch
     else
@@ -34,15 +31,16 @@ class PrototypesController < ApplicationController
   end
 
   def show
-    @prototype = Prototype.find(params[:id])
     @comment = Comment.new
-    @comments = @prototype.comments.includes(:user)
+    @comments = @prototype.comments
   end
 
   def destroy
-    prototype = Prototype.find(params[:id])
-    prototype.destroy
-    redirect_to root_path
+    if @prototype.destroy
+      redirect_to root_path
+    else
+      redirect_to root_path
+    end
   end
 
 
@@ -54,10 +52,6 @@ private
 # { ~~ , ~~ , prototype => { content => "name, text", image=> ~~~~~, aaa=> }}
 def set_tweet
   @prototype = Prototype.find(params[:id])
-end
-
-def create_params
-  @prototype = Prototype.new(prototype_params)
 end
 
 def move_to_index
